@@ -1,0 +1,93 @@
+curl --location --request PUT 'localhost:9200/products' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "mappings": {
+        "properties": {
+            "id": {
+                "type": "integer"
+            },
+            "name": {
+                "type": "text",
+                "analyzer": "index_ngram_analyzer",
+                "search_analyzer": "search_ngram_analyzer"
+            },
+            "price": {
+                "type": "double"
+            },
+            "brand": {
+                "type": "text",
+                "analyzer": "index_ngram_analyzer",
+                "search_analyzer": "search_ngram_analyzer"
+            },
+            "category": {
+                "type": "nested",
+                "properties": {
+                    "name": {
+                        "type": "text",
+                        "analyzer": "index_ngram_analyzer",
+                        "search_analyzer": "search_ngram_analyzer"
+                    },
+                    "subcategory": {
+                        "type": "nested",
+                        "properties": {
+                            "name": {
+                                "type": "text",
+                                "analyzer": "index_ngram_analyzer",
+                                "search_analyzer": "search_ngram_analyzer"
+                            }
+                        }
+                    }
+                }
+            },
+            "tags": {
+                "type": "nested",
+                "properties": {
+                    "name": {
+                        "type": "text",
+                        "analyzer": "index_ngram_analyzer",
+                        "search_analyzer": "search_ngram_analyzer"
+                    },
+                    "description": {
+                        "type": "text",
+                        "analyzer": "index_ngram_analyzer",
+                        "search_analyzer": "search_ngram_analyzer"
+                    }
+                }
+            }
+        }
+    },
+    "settings": {
+        "index.number_of_replicas": 0,
+        "index.number_of_shards": 1,
+        "analysis": {
+            "analyzer": {
+                "index_ngram_analyzer": {
+                    "type": "custom",
+                    "tokenizer": "ngram_tokenizer",
+                    "filter": [
+                        "lowercase",
+                        "stop"
+                    ]
+                },
+                "search_ngram_analyzer": {
+                    "type": "custom",
+                    "tokenizer": "ngram_tokenizer",
+                    "filter": [
+                        "lowercase"
+                    ]
+                }
+            },
+            "tokenizer": {
+                "ngram_tokenizer": {
+                    "type": "ngram",
+                    "min_gram": 2,
+                    "max_gram": 3,
+                    "token_chars": [
+                        "letter"
+                    ]
+                }
+            }
+        }
+    },
+    "aliases": {}
+}'
