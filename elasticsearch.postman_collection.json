@@ -1,0 +1,244 @@
+{
+	"info": {
+		"_postman_id": "bda16506-dd2b-44af-a438-ffc350e65ff3",
+		"name": "elasticsearch",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Product_Search",
+			"item": [
+				{
+					"name": "Mapping_Setting",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"mappings\": {\n        \"properties\": {\n            \"id\": {\n                \"type\": \"integer\"\n            },\n            \"name\": {\n                \"type\": \"text\",\n                \"analyzer\": \"index_ngram_analyzer\",\n                \"search_analyzer\": \"search_ngram_analyzer\"\n            },\n            \"price\": {\n                \"type\": \"double\"\n            },\n            \"brand\": {\n                \"type\": \"text\",\n                \"analyzer\": \"index_ngram_analyzer\",\n                \"search_analyzer\": \"search_ngram_analyzer\"\n            },\n            \"category\": {\n                \"type\": \"nested\",\n                \"properties\": {\n                    \"name\": {\n                        \"type\": \"text\",\n                        \"analyzer\": \"index_ngram_analyzer\",\n                        \"search_analyzer\": \"search_ngram_analyzer\"\n                    },\n                    \"subcategory\": {\n                        \"type\": \"nested\",\n                        \"properties\": {\n                            \"name\": {\n                                \"type\": \"text\",\n                                \"analyzer\": \"index_ngram_analyzer\",\n                                \"search_analyzer\": \"search_ngram_analyzer\"\n                            }\n                        }\n                    }\n                }\n            },\n            \"tags\": {\n                \"type\": \"nested\",\n                \"properties\": {\n                    \"name\": {\n                        \"type\": \"text\",\n                        \"analyzer\": \"index_ngram_analyzer\",\n                        \"search_analyzer\": \"search_ngram_analyzer\"\n                    },\n                    \"description\": {\n                        \"type\": \"text\",\n                        \"analyzer\": \"index_ngram_analyzer\",\n                        \"search_analyzer\": \"search_ngram_analyzer\"\n                    }\n                }\n            }\n        }\n    },\n    \"settings\": {\n        \"index.number_of_replicas\": 0,\n        \"index.number_of_shards\": 1,\n        \"analysis\": {\n            \"analyzer\": {\n                \"index_ngram_analyzer\": {\n                    \"type\": \"custom\",\n                    \"tokenizer\": \"ngram_tokenizer\",\n                    \"filter\": [\n                        \"lowercase\",\n                        \"stop\"\n                    ]\n                },\n                \"search_ngram_analyzer\": {\n                    \"type\": \"custom\",\n                    \"tokenizer\": \"ngram_tokenizer\",\n                    \"filter\": [\n                        \"lowercase\"\n                    ]\n                }\n            },\n            \"tokenizer\": {\n                \"ngram_tokenizer\": {\n                    \"type\": \"ngram\",\n                    \"min_gram\": 2,\n                    \"max_gram\": 3,\n                    \"token_chars\": [\n                        \"letter\"\n                    ]\n                }\n            }\n        }\n    },\n    \"aliases\": {}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:9200/products",
+							"host": [
+								"localhost"
+							],
+							"port": "9200",
+							"path": [
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Products",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:9200/products",
+							"host": [
+								"localhost"
+							],
+							"port": "9200",
+							"path": [
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Indexing",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"OnePlus Nord CE 2\",\n    \"price\": 300.10,\n    \"status\": true,\n    \"brand\": \"OnePlus\",\n    \"category\": [\n        {\n            \"name\": \"Mobile\",\n            \"subcategory\": [\n                {\n                    \"name\": \"SmartPhone\"\n                }\n            ]\n        },\n        {\n            \"name\": \"Electronic\"\n        }\n    ],\n    \"tags\": [\n        {\n            \"name\": \"Blue\",\n            \"description\": \"This is blue color product\"\n        },\n        {\n            \"name\": \"Economic\",\n            \"description\": \"This is economic product\"\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "localhost:9200/products/_doc/1",
+							"host": [
+								"localhost"
+							],
+							"port": "9200",
+							"path": [
+								"products",
+								"_doc",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "check_mapping",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:9200/products",
+							"host": [
+								"localhost"
+							],
+							"port": "9200",
+							"path": [
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "search_all_products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:9200/products/_search",
+							"host": [
+								"localhost"
+							],
+							"port": "9200",
+							"path": [
+								"products",
+								"_search"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "search_product_by_key",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"query\": {\n    \"query_string\": {\n      \"query\": \"one\"\n    }\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:9200/products/_search",
+							"host": [
+								"localhost"
+							],
+							"port": "9200",
+							"path": [
+								"products",
+								"_search"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create_search_template",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"script\": {\n        \"lang\": \"mustache\",\n        \"source\": {\n            \"query\": {\n                \"query_string\": {\n                    \"query\": \"{{keyword}}\",\n                    \"analyzer\": \"search_ngram_analyzer\"\n                }\n            }\n        }\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:9200/_scripts/product-search-template",
+							"host": [
+								"localhost"
+							],
+							"port": "9200",
+							"path": [
+								"_scripts",
+								"product-search-template"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "render_search_template",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": \"product-search-template\",\n    \"params\": {\n        \"keyword\": \"one\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:9200/_render/template",
+							"host": [
+								"localhost"
+							],
+							"port": "9200",
+							"path": [
+								"_render",
+								"template"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "search_product_using_template",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": \"product-search-template\",\n    \"params\": {\n        \"keyword\": \"one\"\n    }\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:9200/products/_search/template",
+							"host": [
+								"localhost"
+							],
+							"port": "9200",
+							"path": [
+								"products",
+								"_search",
+								"template"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

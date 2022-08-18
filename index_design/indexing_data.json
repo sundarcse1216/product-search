@@ -1,0 +1,31 @@
+curl --location --request POST 'localhost:9200/products/_doc/1' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "name": "OnePlus Nord CE 2",
+    "price": 300.10,
+    "status": true,
+    "brand": "OnePlus",
+    "category": [
+        {
+            "name": "Mobile",
+            "subcategory": [
+                {
+                    "name": "SmartPhone"
+                }
+            ]
+        },
+        {
+            "name": "Electronic"
+        }
+    ],
+    "tags": [
+        {
+            "name": "Blue",
+            "description": "This is blue color product"
+        },
+        {
+            "name": "Economic",
+            "description": "This is economic product"
+        }
+    ]
+}'

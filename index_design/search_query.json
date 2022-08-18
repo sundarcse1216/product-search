@@ -1,0 +1,9 @@
+curl --location --request GET 'localhost:9200/products/_search' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+  "query": {
+    "query_string": {
+      "query": "one"
+    }
+  }
+}'
